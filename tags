@@ -1,0 +1,86 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+CircularQueue	buffer/CircularQueue.h	/^CircularQueue<T>::CircularQueue(size_t maxsize):MAXSIZE(maxsize),_curCount(0)$/;"	f	class:CircularQueue
+CircularQueue	buffer/CircularQueue.h	/^class CircularQueue$/;"	c
+LibpcapClass	LibpcapClass.cpp	/^LibpcapClass::LibpcapClass():_recvBuf(new ReceiveBuf),_aggBuf(0)$/;"	f	class:LibpcapClass
+LibpcapClass	LibpcapClass.h	/^class LibpcapClass$/;"	c
+Log	log/Log.cpp	/^Log::Log(string path = PATH) :fout(path)$/;"	f	class:Log
+Log	log/Log.h	/^class Log$/;"	c
+MAXSIZE	buffer/CircularQueue.h	/^	size_t MAXSIZE;$/;"	m	class:CircularQueue
+PATH	log/Log.cpp	/^const string PATH = "~\/code\/bishe\/log.txt";$/;"	v
+PATH	log/Log.h	/^	const string PATH;$/;"	m	class:Log
+Packet	packet/Packet.cpp	/^Packet::Packet(pcap_pkthdr* pkthdr,u_char* packet):_packet(0),_length(0),_pkthdrPtr(0),_dllPtr(0),_dllprotocal(0),_dlloffset(0),_nlPtr(0),_nlprotocal(0),_tlPtr(0),_tlprotocal(0)$/;"	f	class:Packet
+Packet	packet/Packet.h	/^class Packet$/;"	c
+RECVBUFTHRESHOLD	LibpcapClass.h	/^	size_t RECVBUFTHRESHOLD = 1000;$/;"	m	class:LibpcapClass
+ReceiveBuf	buffer/ReceiveBuf.cpp	/^ReceiveBuf::ReceiveBuf()$/;"	f	class:ReceiveBuf
+ReceiveBuf	buffer/ReceiveBuf.cpp	/^ReceiveBuf::ReceiveBuf(size_t size):_pktQue(size)$/;"	f	class:ReceiveBuf
+ReceiveBuf	buffer/ReceiveBuf.h	/^class ReceiveBuf$/;"	c
+SharedBuf	buffer/SharedBuf.cpp	/^SharedBuf::SharedBuf():_bufLock(PTHREAD_MUTEX_INITIALIZER)$/;"	f	class:SharedBuf
+SharedBuf	buffer/SharedBuf.h	/^class SharedBuf:public ReceiveBuf$/;"	c
+UnCopyable	buffer/CircularQueue.h	/^	UnCopyable(){}$/;"	f	class:UnCopyable
+UnCopyable	buffer/CircularQueue.h	/^class UnCopyable$/;"	c
+_MY_LOG_	log/Log.h	2;"	d
+_QR_CIRCULARQUEUE_	buffer/CircularQueue.h	2;"	d
+_QR_LIBPCAPCLASS_	LibpcapClass.h	2;"	d
+_QR_PACKET_	packet/Packet.h	2;"	d
+_QR_RECEIVEBUF_H_	buffer/ReceiveBuf.h	2;"	d
+_QR_SHAREDBUF_H_	buffer/SharedBuf.h	2;"	d
+_aggBuf	LibpcapClass.h	/^	SharedBuf* _aggBuf;$/;"	m	class:LibpcapClass
+_bufLock	buffer/SharedBuf.h	/^	pthread_mutex_t _bufLock;$/;"	m	class:SharedBuf
+_callBackProcess	LibpcapClass.cpp	/^void LibpcapClass::_callBackProcess(u_char* userarg,const struct pcap_pkthdr* pkt,const u_char* pakcet)$/;"	f	class:LibpcapClass
+_chain	buffer/CircularQueue.h	/^	T* _chain;$/;"	m	class:CircularQueue
+_curCount	buffer/CircularQueue.h	/^	size_t _curCount; \/\/当前元素个数$/;"	m	class:CircularQueue
+_dllPtr	packet/Packet.h	/^	u_char* _dllPtr;$/;"	m	class:Packet
+_dlloffset	packet/Packet.h	/^	size_t _dlloffset;$/;"	m	class:Packet
+_dllprotocal	packet/Packet.h	/^	int _dllprotocal;$/;"	m	class:Packet
+_filterString	LibpcapClass.h	/^	string _filterString;$/;"	m	class:LibpcapClass
+_headPtr	buffer/CircularQueue.h	/^	T* _headPtr;$/;"	m	class:CircularQueue
+_initNetworkLayer	packet/Packet.cpp	/^int Packet::_initNetworkLayer()$/;"	f	class:Packet
+_initTransportLayer	packet/Packet.cpp	/^int Packet::_initTransportLayer()$/;"	f	class:Packet
+_length	packet/Packet.h	/^	size_t _length;$/;"	m	class:Packet
+_nlPtr	packet/Packet.h	/^	u_char* _nlPtr;$/;"	m	class:Packet
+_nlprotocal	packet/Packet.h	/^	u_int16 _nlprotocal;$/;"	m	class:Packet
+_packet	packet/Packet.h	/^	u_char* _packet;$/;"	m	class:Packet
+_pktQue	buffer/ReceiveBuf.h	/^	CircularQueue<u_char> _pktQue;$/;"	m	class:ReceiveBuf
+_pkthdrPtr	packet/Packet.h	/^	pcap_pkthdr* _pkthdrPtr;$/;"	m	class:Packet
+_recvBuf	LibpcapClass.h	/^	ReceiveBuf* _recvBuf;$/;"	m	class:LibpcapClass
+_tailPtr	buffer/CircularQueue.h	/^	T* _tailPtr;$/;"	m	class:CircularQueue
+_tlPtr	packet/Packet.h	/^	u_char* _tlPtr;$/;"	m	class:Packet
+_tlprotocal	packet/Packet.h	/^	u_char _tlprotocal;$/;"	m	class:Packet
+aggregate	Aggregate.cpp	/^int aggregate(SharedBuf* sbuf)$/;"	f
+beginReceive	LibpcapClass.cpp	/^int LibpcapClass::beginReceive()$/;"	f	class:LibpcapClass
+count	buffer/CircularQueue.h	/^size_t CircularQueue<T>::count() const$/;"	f	class:CircularQueue
+deQueue	buffer/CircularQueue.h	/^int CircularQueue<T>::deQueue(T* buf,size_t num)$/;"	f	class:CircularQueue
+deQueueAll	buffer/CircularQueue.h	/^int CircularQueue<T>::deQueueAll(T* buf)$/;"	f	class:CircularQueue
+device	LibpcapClass.cpp	/^static pcap_t* LibpcapClass::device = 0;$/;"	m	class:LibpcapClass	file:
+device	LibpcapClass.h	/^	static pcap_t*  device;$/;"	m	class:LibpcapClass
+dstIpv4	packet/Packet.cpp	/^int Packet::dstIpv4(u_int32& ip)$/;"	f	class:Packet
+dstPort	packet/Packet.cpp	/^int Packet::dstPort(u_int16& port)$/;"	f	class:Packet
+enQueue	buffer/CircularQueue.h	/^int CircularQueue<T>::enQueue(T* buf,size_t num)$/;"	f	class:CircularQueue
+fout	log/Log.h	/^	ofstream fout;$/;"	m	class:Log
+initDevice	LibpcapClass.cpp	/^int LibpcapClass::initDevice()$/;"	f	class:LibpcapClass
+main	test/testCircularQueue.cpp	/^int main()$/;"	f
+moveTo	buffer/CircularQueue.h	/^int CircularQueue<T>::moveTo(CircularQueue<T>& que,size_t num)$/;"	f	class:CircularQueue
+moveTo	buffer/ReceiveBuf.cpp	/^int ReceiveBuf::moveTo(ReceiveBuf& buf,size_t num)$/;"	f	class:ReceiveBuf
+pop	buffer/SharedBuf.cpp	/^Packet* pop()$/;"	f
+setAggregateBuf	LibpcapClass.cpp	/^void LibpcapClass::setAggregateBuf(ReceiveBuf* aggBuf)$/;"	f	class:LibpcapClass
+setFilterString	LibpcapClass.cpp	/^void LibpcapClass::setFilterString(const string& str)$/;"	f	class:LibpcapClass
+srcIpv4	packet/Packet.cpp	/^int Packet::srcIpv4(u_int32& ip)$/;"	f	class:Packet
+srcPort	packet/Packet.cpp	/^int Packet::srcPort(u_int16& port)$/;"	f	class:Packet
+store	Store.cpp	/^int store(sharedBuf* sbuf)$/;"	f
+u_char	LibpcapClass.h	/^	typedef unsigned char u_char;$/;"	t	class:LibpcapClass
+u_char	buffer/ReceiveBuf.h	/^	typename unsigned char u_char;$/;"	m	class:ReceiveBuf
+u_char	packet/Packet.h	/^	typename unsigned char u_char;$/;"	m	class:Packet
+u_int16	LibpcapClass.h	/^	typedef unsigned short u_int16;$/;"	t	class:LibpcapClass
+u_int16	packet/Packet.h	/^	typename unsigned short int u_int16;$/;"	m	class:Packet
+u_int32	LibpcapClass.h	/^	typedef unsigned long u_int32;$/;"	t	class:LibpcapClass
+u_int32	packet/Packet.h	/^	typename unsigned long u_int32;$/;"	m	class:Packet
+writeLog	log/Log.cpp	/^void writeLog(const string& msg)$/;"	f
+~CircularQueue	buffer/CircularQueue.h	/^CircularQueue<T>::~CircularQueue()$/;"	f	class:CircularQueue
+~Log	log/Log.cpp	/^Log::~Log()$/;"	f	class:Log
+~SharedBuf	buffer/SharedBuf.cpp	/^SharedBuf::~SharedBuf()$/;"	f	class:SharedBuf
+~UnCopyable	buffer/CircularQueue.h	/^	~UnCopyable(){}$/;"	f	class:UnCopyable
