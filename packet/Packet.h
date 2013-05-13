@@ -1,3 +1,6 @@
+/**************************************************
+ *_packet point to the packet
+ **************************************************/
 #ifndef _QR_PACKET_
 #define _QR_PACKET_
 #include<pcap.h>
@@ -23,6 +26,7 @@ private:
 	u_int16 _nlprotocal;
 	//iphdr* _iphdrPtr;
 	//ip6_hdr* _ip6hdrPtr;
+
 	///transport layer
 	u_char* _tlPtr;
 	u_char _tlprotocal;

@@ -14,14 +14,16 @@ int store(SharedBuf* sbuf)
 	ofstream fout(outputFile.c_str());
 
 
-	pthread_mutex_lock(sbuf->_bufLock);
+	//pthread_mutex_lock(sbuf->_bufLock);
+	//TODO:when calling the "unlock"
+	sbuf->lock();
 	
 	size_t pktCount = sbuf->_pkthdrVec.size();
 	for(size_t i = 0;i<pktCount;++i)
 	{
 		//TODO:CircularQueue need a function: getPacket(T* start,size_t count,T* target);
-		sbuf->
-		Packet pkt
+		Packet pkt = sbuf->pop();
+	
 	}
 
 }

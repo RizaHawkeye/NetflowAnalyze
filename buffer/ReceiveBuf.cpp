@@ -23,3 +23,8 @@ int ReceiveBuf::moveTo(ReceiveBuf& buf,size_t num)
 	else
 		return numOfMoved;
 }
+
+size_t ReceiveBuf::size()
+{
+	return _pkthdrQue.size();
+}

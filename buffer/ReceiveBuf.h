@@ -1,3 +1,7 @@
+/***************************************
+ *
+ *
+ ***************************************/
 #ifndef _QR_RECEIVEBUF_H_
 #define _QR_RECEIVEBUF_H_
 #include "CircularQueue.h"
@@ -15,6 +19,7 @@ public:
 	ReceiveBuf(size_t);
 	int ReceiveBuf::moveTo(ReceiveBuf& buf,num);
 	virtual ~ReceiveBuf();
+	size_t size();
 };
 
 #endif

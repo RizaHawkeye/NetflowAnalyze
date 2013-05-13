@@ -6,3 +6,12 @@
 
 2013-4-19 17:00
 该完成SharedBuf.cpp中的pop（）函数 和store.cpp
+
+
+2013-5-13 22:45
+Completed:
+1. completed "pop" function in SharedBuf.cpp
+2. add "lock" and "unlock" functions in SharedBuf.cpp
+
+Shoule Complete
+1. should complete output packet int Store.cpp:
