@@ -1,3 +1,6 @@
+~/code/bishe/NetflowAnalyze.git 当做服务器上的版本，push的时候往这里push
+另外在github上备份一份代码
+
 2013-4-15 23:00
 该完成CircularQueue的copyTo函数和operator=   完成！！
 
