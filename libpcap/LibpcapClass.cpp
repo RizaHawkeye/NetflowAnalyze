@@ -12,6 +12,12 @@ void LibpcapClass::setAggregateBuf(ReceiveBuf* aggBuf)
 	_aggBuf = aggBuf;
 }
 
+/********************************************
+ *begin to receive until something is wrong
+ *TODO:I prefer to add a parameter to decide receiving until something or other behaves
+ *receive data and store in _recvBuf
+ *when the count of data have come to a threshold, move them to _aggBuf
+ ********************************************/
 int LibpcapClass::beginReceive()
 {
 	Log log;
@@ -80,11 +86,12 @@ int LibpcapClass::beginReceive()
 	return 0;
 }
 
-/*收到的数据包先放入缓存，达到阈值时放入目标队列
+/*********************************************
+ *收到的数据包先放入缓存，达到阈值时放入目标队列
  *如果目标队列满了，就插入一半试试
  *对目标队列的操作要加锁
  *???这里push_back pkt 又没为问题？？pkt是在堆上的吗
- */
+ *********************************************/
 void LibpcapClass::_callBackProcess(u_char* userarg,const struct pcap_pkthdr* pkt,const u_char* pakcet)
 {
 	//store int buf
@@ -93,27 +100,35 @@ void LibpcapClass::_callBackProcess(u_char* userarg,const struct pcap_pkthdr* pk
 	{
 		_recvBuf->_pkthdrVec.push_back(pkt);
 	}
-	if(_recvBuf->_pkthdrVec.size() => RECVBUFTHRESHOLD)
+	if(_recvBuf->_pkthdrVec.size() >= RECVBUFTHRESHOLD)
 	{
 		///加锁
-		pthread_mutex_lock(_aggBuf->_bufLock);
+		_aggBuf->lock();
+		//pthread_mutex_lock(_aggBuf->_bufLock);
 		int numOfMoved = _recvBuf->moveTo(_aggBuf,RECVBUFTHRESHOLD);
 		///如果目标队列满了，就插入一半试试
 		if(numOfMoved == -1)
 		{
 			numOfMoved = _recvBuf->moveTo(_aggBuf,RECVBUFTHRESHOLD/2);
+			//TODO:what's will be if the buf is still full
 		}
-		pthread_mutex_unlock(_aggBuf->_bufLock);
+		_aggBuf->unlock();
 	}
 }
 
+/***************************************
+ *add a filter string for libpcap
+ *default value is null string
+ ***************************************/
 void LibpcapClass::setFilterString(const string& str)
 {
 	_filterString = str;
 }
 
-/*如果没有该协议，protocal设置为-1，offset设置为0
- */
+/********************************************
+ *get datalink layer's protocal and offset
+ *如果没有该协议，protocal设置为-1，offset设置为0
+ ********************************************/
 int LibpcapClass::dataLinkOffset(int& protocal,size_t& offset);
 {
 	
@@ -155,8 +170,10 @@ int LibpcapClass::dataLinkOffset(int& protocal,size_t& offset);
 	return 0;
 }
 
-/*设置device的值,device是静态的，初始化一次就行了
- */
+/********************************************
+ *设置device的值,device是静态的，初始化一次就行了
+ *if device have initialized, return 
+ ********************************************/
 int LibpcapClass::initDevice()
 {
 	///device是静态的，如果device不为0，就不用在调函数了

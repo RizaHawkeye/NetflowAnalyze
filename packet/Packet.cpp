@@ -1,6 +1,6 @@
 #include "Packet.h"
 #include<stdexcept>
-
+#include"../LibpcapClass.h"
 Packet::Packet(pcap_pkthdr* pkthdr,u_char* packet):_packet(packet),_length(_pkthdePtr->caplen),
 											_pkthdrPtr(pkthdr), _dllPtr(0),_dllprotocal(0),
 											_dlloffset(0), _nlPtr(0),_nlprotocal(0),
@@ -22,102 +22,151 @@ Packet::Packet(pcap_pkthdr* pkthdr,u_char* packet):_packet(packet),_length(_pkth
 		throw std::runtime_error("未识别的网络层协议");
 	}
 }
-
-int Packet::_initNetworkLayer()
+int Packet::_initDatalinkLayer()
 {
-	switch(_dllprotocal)
+	if(_setDatalinkLayerProtocalName(_dllprotocal))
+		return 0;
+	else
+		return -1;
+}
+bool Packet::_setDatalinkLayerProtocalName(int dllprotocal)
+{
+	switch(dllprotocal)
 	{
 	case DLT_EN10MB:
-		_nlPtr = _dllPtr + 14;
-		_nlprotocal = (ether_head*)_dllPtr->ether_type;
-		return 0;
+		_dllProtocalName = "EN10MB";
+		return true;
 //	case DLT_IEEE802:
 //		//TODO:other prototal
 //		break;
 	default:
-		return -1;
+		return false;
 	}
-
 }
-
-int Packet::_initTransportLayer()
+int Packet::_initNetworkLayer()
 {
-	switch(_nlprotocal)
+	switch(_dllProtocalName)
 	{
-	////ip
-	case 0x0800:
-		_tlPtr = _nlPtr + (iphdr*)_nlPtr->ihl;
-		_tlprotocal = (iphdr*)_nlPtr->protocol;
-		//_tlprotocal = _iphdrPtr->protocol;
-		return 0;
-		break;
-//	//ipv6
-//	case 0x86DD:
-//		//TODO:
-//		break;
+	case "EN10MB":
+		_nlPtr = _dllPtr + 14;
+		_nlprotocal = (ether_head*)_dllPtr->ether_type;
+		if(setNetworkLayerProtocalName(_nlprotocal))
+		{
+			return 0;
+		}
 	default:
 		return -1;
 	}
 }
-
-int Packet::srcIpv4(u_int32& ip)
+bool Packet::_setNetworkLayerProtocalName(u_int16 nlprotocal)
 {
-	///ip
-	if(_nlprotocal == 0x0800)
+	switch(nlprotocal)
 	{
-		ip = _nlPtr->saddr;
-		return 0;
+	case 0x0800:	 //ip
+		_nlProtocalName = "IPv4";
+		return true;
+	case 0x86DD:    //ipv6
+		_nlProtocalName = "IPv6";
+		return true;
+	default:
+		return false;
 	}
-	else
-		return -1;
 }
 
-int Packet::dstIpv4(u_int32& ip)
+int Packet::_initTransportLayer()
 {
-	if(_nlprotocal == 0x0800)
+	switch(_nlProtocal)
 	{
-		ip = _nlPtr->daddr;
+	case "IPv4":
+		_tlPtr = _nlPtr + (iphdr*)_nlPtr->ihl;
+		_tlprotocal = (iphdr*)_nlPtr->protocol;
+		//_tlprotocal = _iphdrPtr->protocol;
+		_setTransportLayerProtocalName(_tlprotocal);
 		return 0;
-	}
-	else
+	case "IPv6":
+		//TODO:
+		_setTransportLayerProtocalName(_tlprotocal);
+		return 0;
+	default:
 		return -1;
+	}
+}
+bool Packet::_setTransportLayerProtocalName(u_char tlprotocal)
+{
+	switch(tlprotocal)
+	{
+	case 0x06:   //tcp
+		_tlProtocalName = "TCP";
+		return 0;
+	case 0x11:   //udp
+		_tlProtocalName = "UDP";
+		return 0;
+	default:
+		return -1;
+	}
+}
+u_int32 Packet::getSrcIpv4()
+{
+	if(_nlProtocalName == "IPv4";
+		return ((iphdr*)_nlPtr)->saddr;
+	else
+		//TODO:throw an exception;
+		throw std::runtime_error("不是IP6协议")
 }
 
-int Packet::srcPort(u_int16& port)
+u_int32 Packet::getDstIpv4()
 {
-	if(_tlprotocal == 0x06)   //tcp
-	{
-		port = _tlPtr->source;
-		return 0;
-	}
-	else if(0x11) //udp
-	{
-		port = _tlPtr->source;
-		return 0;
-	}
+	if(_nlProtocalName == "IPv4";
+		return ((iphdr*)_nlPtr)->daddr;
 	else
-		return -1;
+		//TODO:throw an exception;
+		throw std::runtime_error("不是IP6协议")
+}
+in6_addr Packet::getSrcIpv6()
+{
+	if(_nlProtocalName == "IPv6";
+		return ((ip6_hdr*)_nlPtr)->ip6_src;
+	else
+		//TODO:throw an exception;
+		throw std::runtime_error("不是IP6协议")
+}
+in6_addr Packet::getDstIpv6()
+{
+	if(_nlProtocalName == "IPv6";
+		return ((ip6_hdr*)_nlPtr)->ip6_dst;
+	else
+		//TODO:throw an exception;
+		throw std::runtime_error("不是IP6协议")
 }
 
-int Packet::dstPort(u_int16& port)
+string Packet::getSource()
 {
-	if(_tlprotocal == 0x06)   //tcp
+	if(_nlProtocalName == "IPv4")
 	{
-		port = _tlPtr->dest;
-		return 0;
+		
 	}
-	else if(0x11) //udp
+	else if(_nlProtocalName == "IPv6")
 	{
-		port = _tlPtr->dest;
-		return 0;
+		
 	}
 	else
-		return -1;
+		return "";
 }
 
+string Packet::getDestination()
+{
 
+}
 
+string Packet::getTime()
+{
 
+}
+string Packet::getProtocal()
+{
 
-
-
+}
+size_t Packet::getLength()
+{
+	return _length;
+}

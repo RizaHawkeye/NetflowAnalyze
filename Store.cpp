@@ -15,15 +15,29 @@ int store(SharedBuf* sbuf)
 
 
 	//pthread_mutex_lock(sbuf->_bufLock);
-	//TODO:when calling the "unlock"
+	//TODO:when to call the "unlock"
 	sbuf->lock();
 	
 	size_t pktCount = sbuf->_pkthdrVec.size();
 	for(size_t i = 0;i<pktCount;++i)
 	{
 		//TODO:CircularQueue need a function: getPacket(T* start,size_t count,T* target);
-		Packet pkt = sbuf->pop();
-	
+		Packet* pkt = sbuf->pop();
+		storePacketInTxt(pkt,fout);
 	}
+	///??it will unlock until store all packet in SharedBuf
+	sbuf->unlock();
+}
 
+/******************************************************
+ *No. Time Source Destination Protocal Length Info
+ *****************************************************/
+void storePacketInTxt(Packet* pakcet,ofstream& fout)
+{
+	fout<<packet->getTime()<<"\t";
+	fout<<packet->getSource()<<"\t";
+	fout<<packet->getDestination()<<"\t";
+	fout<<packet->getProtocal()<<"\t";
+	fout<<packet->getLength()<<"\t";
+	fout<<endl;
 }

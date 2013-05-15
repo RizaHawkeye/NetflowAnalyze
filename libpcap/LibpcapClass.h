@@ -14,7 +14,7 @@ public:
 	LibpcapClass();
 	int beginReceive();
 	void setFilterString(const string&);
-	//返回数据链路层的协议头的长度
+
 	static int dataLinkOffset(int& protocal,size_t& offset);
 	void setAggregateBuf(ReceiveBuf* aggBuf);
 private:

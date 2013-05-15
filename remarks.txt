@@ -16,5 +16,14 @@ Completed:
 1. completed "pop" function in SharedBuf.cpp
 2. add "lock" and "unlock" functions in SharedBuf.cpp
 
-Shoule Complete
+Should Complete
 1. should complete output packet int Store.cpp:
+
+
+2013-5-15 22:50
+Completed:
+1. modified some funcionts of LibpcapClass 
+2. completed store funtion in Store.cpp
+
+Should complete
+1. main.cpp

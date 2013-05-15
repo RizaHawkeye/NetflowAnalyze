@@ -5,7 +5,7 @@ SharedBuf::SharedBuf():_bufLock(PTHREAD_MUTEX_INITIALIZER)
 
 SharedBuf::~SharedBuf()
 {
-	//TODO:what it will do if the lock is destroied
+	//TODO:what it will do if the lock is destroied? How to judge if lock had destroy
 	pthread_mutex_destroy(&_bufLock);
 }
 
