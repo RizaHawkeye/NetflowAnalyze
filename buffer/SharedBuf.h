@@ -11,7 +11,7 @@
 class SharedBuf:public ReceiveBuf
 {
 public:
-	SharedBuf():_bufLock(PTHREAD_MUTEX_INITIALIZER);
+	SharedBuf();
 	~SharedBuf();
 	Packet* pop();
 	int lock();

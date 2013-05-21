@@ -8,17 +8,20 @@
 #include<netinet/ip.h>
 #include<netinet/tcp.h>
 #include<net/ethernet.h>
+#include<netinet/ip6.h>
 using std::string;
 class Packet
 {
 public:
-	typename unsigned char u_char;
-	typename unsigned short int u_int16;
-	typename unsigned long u_int32;
+	typedef unsigned char u_char;
+	typedef unsigned short int u_int16;
+	typedef unsigned long u_int32;
 private:
 	u_char* _packet;
 	size_t _length;
 	pcap_pkthdr* _pkthdrPtr;
+
+
 	///datalink layer
 	u_char* _dllPtr;
 	int _dllprotocal;
@@ -50,18 +53,19 @@ private:
 	int _initTransportLayer();
 
 	///this set of functions return false if protocal is unrecognised
-	bool _setDatalinkLayerProtocalName(int dllprotocal)
-	bool _setNetworkLayerProtocalName(u_int16 nlprotocal)
-	bool _setTransportLayerProtocalName(u_char tlprotocal)
+	bool _setDatalinkLayerProtocalName(int dllprotocal);
+	bool _setNetworkLayerProtocalName(u_int16 nlprotocal);
+	bool _setTransportLayerProtocalName(u_char tlprotocal);
 
 
 public:
-	Packet();
+	Packet(pcap_pkthdr*,u_char*);
+	~Packet();
 	//TODO:I perfer to return string or add another four function to return string
 	u_int32 getSrcIpv4();
 	u_int32 getDstIpv4();
-	in6_add getSrcIpv6();
-	in6_add getDstIpv6();
+	in6_addr getSrcIpv6();
+	in6_addr getDstIpv6();
 
 	//TODO: how to change to string
 	///this set of functions used to store

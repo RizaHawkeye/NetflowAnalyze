@@ -16,21 +16,30 @@ SharedBuf::~SharedBuf()
 Packet* SharedBuf::pop()
 {
 	pcap_pkthdr* pkthdr = new pcap_pkthdr();
-	*pkthdr = _pkthdrQue[0];
+	*pkthdr = *_pkthdrQue[0];
 	_pkthdrQue.pop_front();
 	
 	u_char* pkt = new u_char[pkthdr->caplen];
 	_pktQue.deQueue(pkt,pkthdr->caplen);
-	Packet* pkt = new Packet(pkthdr,pktQue);
+	Packet* packet = new Packet(pkthdr,pkt);
+	return packet;
 }
 
+/*******************************************
+ *return 0 if success, else return error number
+ *******************************************/
 int SharedBuf::lock()
 {
-	int ret = pthread_mutex_lock(_bufLock)
+	int ret = pthread_mutex_lock(&_bufLock);
 	return ret;
 }
+
+
+/*******************************************
+ *return 0 if success, else return error number
+ *******************************************/
 int SharedBuf::unlock()
 {
-	int ret = pthread_mytex_unlock(_bufLock)
+	int ret = pthread_mutex_unlock(&_bufLock);
 	return ret;
 }

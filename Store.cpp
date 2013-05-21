@@ -4,6 +4,14 @@
 #include <fstream>
 #include <string>
 
+void storeThread(void* args)
+{
+	SharedBuf* buf = static_cast<SharedBuf*>(args);
+	while(true)
+	{
+		store(buf);
+	}
+}
 /******************************************************
  *从缓存中读取数据包，然后存入文本（数据库）中
  *sbuf指向共享缓存

@@ -105,12 +105,13 @@ int CircularQueue<T>::enQueue(T* buf,size_t num)
 	}
 }
 
-/*函数返回出队列的个数，不够的话有几个返回几个
- */
+/*********************************************
+ *函数返回出队列的个数，不够的话有几个返回几个
+ *********************************************/
 template<typename T>
 int CircularQueue<T>::deQueue(T* buf,size_t num)
 {
-	///没有翻回去
+	///source queue没有翻回去
 	if(_headPtr <= _tailPtr)
 	{
 		if(_curCount >= num)
@@ -133,14 +134,14 @@ int CircularQueue<T>::deQueue(T* buf,size_t num)
 			return numCanCopy;
 		}
 	}
-	///翻回去了
+	///source queue翻回去了
 	else
 	{
 		if(_curCount >= num)
 		{
 			//buf = (T*)malloc(sizeof(T) * num);
 			buf = new T[num];
-			int numToEnd = _chain + MAXSIZE - _tailPtr;
+			size_t numToEnd = _chain + MAXSIZE - _tailPtr;
 			///从队列头到数组尾部就够了的情况
 			if(numToEnd >= num)
 			{
@@ -204,46 +205,69 @@ size_t CircularQueue<T>::count() const
 	//_chain = new 
 //}
 
+/********************************************************
+ *move data to que. the data in this->_chain will be deleted
+ *return the number of moved. return -1 if there is no enough space 
+ *this function also will set que._tailPtr and que._curCount
+ ********************************************************/
 template<typename T>
 int CircularQueue<T>::moveTo(CircularQueue<T>& que,size_t num)
 {
-	//que中有足够的位置
-	if(num <= que._chain + que.MAXSIZE - que._curCount - 1)
+	///que中有足够的位置
+	if(num <= que.MAXSIZE - que._curCount - 1)
 	{
-		///没翻回来
-		if(_tailPtr >= _headPtr)
-		{
-			int numMoveToEnd = que._chain + que.MAXSIZE - que._tailPtr;
-			if(numMoveToEnd >= num)
-			{
-				deQueue(que._tailPtr,num);
-				que._tail += num;
-			}
-			else
-			{
-				deQueue(que._tailPtr,numMoveToEnd);
-				deQueue(que._chainPtr,num - numMoveToEnd);
-				que._tailPtr = que._chain + num -numMoveToEnd;
-			}
-		}
-		///翻回来了
-		else
+
+	//	///source queue 没翻回来
+	//	if(_tailPtr >= _headPtr)
+	//	{
+	//		///number of can be insert at the end of que
+	//		int numMoveToEnd = que._chain + que.MAXSIZE - que._tailPtr;  
+
+	//		///all data can be insert to que's end
+	//		if(numMoveToEnd >= num)
+	//		{
+	//			deQueue(que._tailPtr,num);
+	//			que._tailPtr += num;
+	//		}
+	//		else
+	//		{
+	//			deQueue(que._tailPtr,numMoveToEnd);
+	//			deQueue(que._chain,num - numMoveToEnd);
+	//			que._tailPtr = que._chain + num -numMoveToEnd;
+	//		}
+	//	}
+	//	///翻回来了
+	//	else
+	//	{
+	//		deQueue(que._tailPtr,num);
+	//		que._tail += num;
+	//	}
+
+
+ 		///no need to condsider wether source queue is overturn. deQueue has encapsulate it
+		///number of can be insert at the end of que
+		size_t numMoveToEnd = que._chain + que.MAXSIZE - que._tailPtr;  
+
+		///all data can be insert to que's end
+		if(numMoveToEnd >= num)
 		{
 			deQueue(que._tailPtr,num);
-			que._tail += num;
+			que._tailPtr += num;
+			que._curCount += num;
 		}
+		else
+		{
+			deQueue(que._tailPtr,numMoveToEnd);
+			deQueue(que._chain,num - numMoveToEnd);
+			que._tailPtr = que._chain + num -numMoveToEnd;
+			que._curCount += num;
+		}
+
 		return _curCount;
 	}
 	else
 		return -1;
 }
-
-
-
-
-
-
-
 
 
 

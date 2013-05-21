@@ -1,5 +1,5 @@
 /***************************************
- *
+ *ReceiveBuf used to store all origin packets and the their pcap_pkthdr struct
  *
  ***************************************/
 #ifndef _QR_RECEIVEBUF_H_
@@ -7,19 +7,20 @@
 #include "CircularQueue.h"
 #include<deque>
 #include<pcap.h>
-#include<cstddef.h>
+#include<cstddef>
 using std::deque;
 class ReceiveBuf
 {
 public:
-	typename unsigned char u_char;
-	CircularQueue<u_char> _pktQue;
-	deque<pcap_pkthdr*> _pkthdrQue
+	typedef unsigned char u_char;
 	ReceiveBuf();
 	ReceiveBuf(size_t);
-	int ReceiveBuf::moveTo(ReceiveBuf& buf,num);
+	int moveTo(ReceiveBuf& buf,size_t num);
 	virtual ~ReceiveBuf();
 	size_t size();
+protected:
+	CircularQueue<u_char> _pktQue;
+	deque<pcap_pkthdr*> _pkthdrQue;
 };
 
 #endif

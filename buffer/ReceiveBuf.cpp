@@ -16,7 +16,7 @@ ReceiveBuf::~ReceiveBuf()
  ***************************************************/
 int ReceiveBuf::moveTo(ReceiveBuf& buf,size_t num)
 {
-	buf._pkthdrVec = _pkthdrVec;
+	buf._pkthdrQue = _pkthdrQue;
 	int numOfMoved = _pktQue.moveTo(buf._pktQue,num);
 	if(numOfMoved == -1)
 		return -1;

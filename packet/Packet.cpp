@@ -22,6 +22,23 @@ Packet::Packet(pcap_pkthdr* pkthdr,u_char* packet):_packet(packet),_length(_pkth
 		throw std::runtime_error("未识别的网络层协议");
 	}
 }
+
+
+/******************************************************
+ *free the memory 
+ ******************************************************/
+~Packet::Packet()
+{
+	if(_packet != 0)
+		delete _packet;
+	if(_pkthdePtr != 0)
+		delete _pkthdePtr;
+}
+
+
+/********************************************************
+ *
+ ********************************************************/
 int Packet::_initDatalinkLayer()
 {
 	if(_setDatalinkLayerProtocalName(_dllprotocal))

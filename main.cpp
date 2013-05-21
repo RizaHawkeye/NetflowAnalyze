@@ -1,6 +1,6 @@
 #include<string>
 #include<iostream>
-#include"LibpcapClass.h"
+#include"../LibpcapClass.h"
 
 int main()
 {
@@ -8,10 +8,16 @@ int main()
 	{
 		cerr<<"Init network interface error"<<endl;
 	}
-	//TODO:create a new thread to store
 	LibpcapClass libpcapObj;
+
+	//TODO:create a new thread to store
+	pthread_t tid;
+	pthread_create(tid,NULL,storeThread,
+
+	///begin to receive packets
 	libpcapObj.beginReceive();
 
-	
 	return 0;
 }
+
+
