@@ -4,13 +4,22 @@
 #include <fstream>
 #include <string>
 
-void storeThread(void* args)
+using std::ofstream;
+using std::endl;
+
+
+int store(SharedBuf* sbuf);
+void storePacketInTxt(Packet* pakcet,ofstream& fout);
+
+
+void* storeThread(void* args)
 {
 	SharedBuf* buf = static_cast<SharedBuf*>(args);
 	while(true)
 	{
 		store(buf);
 	}
+	return (void*)0;
 }
 /******************************************************
  *从缓存中读取数据包，然后存入文本（数据库）中
@@ -26,7 +35,7 @@ int store(SharedBuf* sbuf)
 	//TODO:when to call the "unlock"
 	sbuf->lock();
 	
-	size_t pktCount = sbuf->_pkthdrVec.size();
+	size_t pktCount = sbuf->size();
 	for(size_t i = 0;i<pktCount;++i)
 	{
 		//TODO:CircularQueue need a function: getPacket(T* start,size_t count,T* target);
@@ -35,12 +44,13 @@ int store(SharedBuf* sbuf)
 	}
 	///??it will unlock until store all packet in SharedBuf
 	sbuf->unlock();
+	return pktCount;
 }
 
 /******************************************************
  *No. Time Source Destination Protocal Length Info
  *****************************************************/
-void storePacketInTxt(Packet* pakcet,ofstream& fout)
+void storePacketInTxt(Packet* packet,ofstream& fout)
 {
 	fout<<packet->getTime()<<"\t";
 	fout<<packet->getSource()<<"\t";
@@ -49,3 +59,7 @@ void storePacketInTxt(Packet* pakcet,ofstream& fout)
 	fout<<packet->getLength()<<"\t";
 	fout<<endl;
 }
+
+
+
+

@@ -1,7 +1,9 @@
 #include "Packet.h"
 #include<stdexcept>
-#include"../LibpcapClass.h"
-Packet::Packet(pcap_pkthdr* pkthdr,u_char* packet):_packet(packet),_length(_pkthdePtr->caplen),
+#include"../libpcap/LibpcapClass.h"
+#include<time.h>
+#include<sstream>
+Packet::Packet(pcap_pkthdr* pkthdr,u_char* packet):_packet(packet),_length(_pkthdrPtr->caplen),
 											_pkthdrPtr(pkthdr), _dllPtr(0),_dllprotocal(0),
 											_dlloffset(0), _nlPtr(0),_nlprotocal(0),
 											_tlPtr(0), _tlprotocal(0)
@@ -25,14 +27,14 @@ Packet::Packet(pcap_pkthdr* pkthdr,u_char* packet):_packet(packet),_length(_pkth
 
 
 /******************************************************
- *free the memory 
+ *free the memory
  ******************************************************/
-~Packet::Packet()
+Packet::~Packet()
 {
 	if(_packet != 0)
 		delete _packet;
-	if(_pkthdePtr != 0)
-		delete _pkthdePtr;
+	if(_pkthdrPtr != 0)
+		delete _pkthdrPtr;
 }
 
 
@@ -62,19 +64,33 @@ bool Packet::_setDatalinkLayerProtocalName(int dllprotocal)
 }
 int Packet::_initNetworkLayer()
 {
-	switch(_dllProtocalName)
+//	switch(_dllProtocalName)
+//	{
+//	case "EN10MB":
+//		_nlPtr = _dllPtr + 14;
+//		_nlprotocal = (ether_head*)_dllPtr->ether_type;
+//		if(setNetworkLayerProtocalName(_nlprotocal))
+//		{
+//			return 0;
+//		}
+//	default:
+//		return -1;
+//	}
+	if(_dllProtocalName == "EN10MB")
 	{
-	case "EN10MB":
 		_nlPtr = _dllPtr + 14;
-		_nlprotocal = (ether_head*)_dllPtr->ether_type;
-		if(setNetworkLayerProtocalName(_nlprotocal))
+		_nlprotocal = ((ether_header*)_dllPtr)->ether_type;
+		if(_setNetworkLayerProtocalName(_nlprotocal))
 		{
 			return 0;
 		}
-	default:
-		return -1;
+		else
+			return -1;
 	}
+	else
+		return -1;
 }
+
 bool Packet::_setNetworkLayerProtocalName(u_int16 nlprotocal)
 {
 	switch(nlprotocal)
@@ -92,21 +108,37 @@ bool Packet::_setNetworkLayerProtocalName(u_int16 nlprotocal)
 
 int Packet::_initTransportLayer()
 {
-	switch(_nlProtocal)
+//	switch(_nlProtocal)
+//	{
+//	case "IPv4":
+//		_tlPtr = _nlPtr + (iphdr*)_nlPtr->ihl;
+//		_tlprotocal = (iphdr*)_nlPtr->protocol;
+//		//_tlprotocal = _iphdrPtr->protocol;
+//		_setTransportLayerProtocalName(_tlprotocal);
+//		return 0;
+//	case "IPv6":
+//		//TODO:
+//		_setTransportLayerProtocalName(_tlprotocal);
+//		return 0;
+//	default:
+//		return -1;
+//	}
+	if(_nlProtocalName == "IPv4")
 	{
-	case "IPv4":
-		_tlPtr = _nlPtr + (iphdr*)_nlPtr->ihl;
-		_tlprotocal = (iphdr*)_nlPtr->protocol;
+		_tlPtr = _nlPtr + ((iphdr*)_nlPtr)->ihl;
+		_tlprotocal = ((iphdr*)_nlPtr)->protocol;
 		//_tlprotocal = _iphdrPtr->protocol;
 		_setTransportLayerProtocalName(_tlprotocal);
 		return 0;
-	case "IPv6":
+	}
+	else if(_nlProtocalName == "IPv6")
+	{
 		//TODO:
 		_setTransportLayerProtocalName(_tlprotocal);
 		return 0;
-	default:
-		return -1;
 	}
+	else
+		return -1;
 }
 bool Packet::_setTransportLayerProtocalName(u_char tlprotocal)
 {
@@ -122,68 +154,146 @@ bool Packet::_setTransportLayerProtocalName(u_char tlprotocal)
 		return -1;
 	}
 }
-u_int32 Packet::getSrcIpv4()
+Packet::u_int32 Packet::getSrcIpv4() const
 {
-	if(_nlProtocalName == "IPv4";
+	if(_nlProtocalName == "IPv4")
 		return ((iphdr*)_nlPtr)->saddr;
 	else
 		//TODO:throw an exception;
-		throw std::runtime_error("不是IP6协议")
+		throw std::runtime_error("不是IP4协议");
 }
 
-u_int32 Packet::getDstIpv4()
+Packet::u_int32 Packet::getDstIpv4() const
 {
-	if(_nlProtocalName == "IPv4";
+	if(_nlProtocalName == "IPv4")
 		return ((iphdr*)_nlPtr)->daddr;
 	else
 		//TODO:throw an exception;
-		throw std::runtime_error("不是IP6协议")
+		throw std::runtime_error("不是IP4协议");
 }
-in6_addr Packet::getSrcIpv6()
+in6_addr Packet::getSrcIpv6() const
 {
-	if(_nlProtocalName == "IPv6";
+	if(_nlProtocalName == "IPv6")
 		return ((ip6_hdr*)_nlPtr)->ip6_src;
 	else
 		//TODO:throw an exception;
-		throw std::runtime_error("不是IP6协议")
+		throw std::runtime_error("不是IP6协议");
 }
-in6_addr Packet::getDstIpv6()
+in6_addr Packet::getDstIpv6() const
 {
-	if(_nlProtocalName == "IPv6";
+	if(_nlProtocalName == "IPv6")
 		return ((ip6_hdr*)_nlPtr)->ip6_dst;
 	else
 		//TODO:throw an exception;
-		throw std::runtime_error("不是IP6协议")
+		throw std::runtime_error("不是IP6协议");
 }
 
-string Packet::getSource()
+/*************************************
+ *if error return NULL string
+ *inet_ntoa and inet_ntop can change the network order to host order
+ ************************************/
+string Packet::getSource() const
 {
 	if(_nlProtocalName == "IPv4")
 	{
-		
+		try
+		{
+			in_addr ipn;
+			ipn.s_addr = getSrcIpv4();
+			char* ipa = inet_ntoa(ipn);
+			return string(ipa);
+		}
+		catch(std::exception& ex)
+		{
+			return "";	
+		}
 	}
 	else if(_nlProtocalName == "IPv6")
 	{
-		
+		try{
+			char ipv6[INET6_ADDRSTRLEN];
+			in6_addr ipv6n = getSrcIpv6();
+			const char* ret = inet_ntop(AF_INET6,static_cast<void*>(&ipv6n),ipv6,INET6_ADDRSTRLEN);
+			if(ret != NULL)
+			{
+				return string(ipv6);
+			}
+			else
+			{
+				return "";
+			}
+		}
+		catch(std::exception& ex)
+		{
+			return "";
+		}
 	}
 	else
 		return "";
 }
 
-string Packet::getDestination()
+string Packet::getDestination() const
 {
-
+	if(_nlProtocalName == "IPv4")
+	{
+		try
+		{
+			in_addr ipn;
+			ipn.s_addr = getDstIpv4();
+			char* ipa = inet_ntoa(ipn);
+			return string(ipa);
+		}
+		catch(std::exception& ex)
+		{
+			return "";
+		}
+	}
+	else if(_nlProtocalName == "IPv6")
+	{
+		try{
+			char ipv6[INET6_ADDRSTRLEN];
+			in6_addr ipv6n = getDstIpv6();
+			const char* ret = inet_ntop(AF_INET6,static_cast<void*>(&ipv6n),ipv6,INET6_ADDRSTRLEN);
+			if(ret != NULL)
+			{
+				return string(ipv6);
+			}
+			else
+			{
+				return "";
+			}
+		}
+		catch(std::exception& ex)
+		{
+			return "";
+		}
+	}
+	else
+	{
+		return "";
+	}
 }
 
-string Packet::getTime()
+string Packet::getTime() const
 {
-
+	std::ostringstream sout;
+	sout<<_pkthdrPtr->ts.tv_sec<<"."<<_pkthdrPtr->ts.tv_usec;
+	return sout.str();
 }
-string Packet::getProtocal()
+/****************************************
+ *if this packet has transfer layer protocal return it
+ *if it doesn't have transfer layer protocal and it has network layer return it
+ ****************************************/
+string Packet::getProtocal() const
 {
-
+	if(_tlProtocalName != "")
+		return _tlProtocalName;
+	else if(_nlProtocalName != "")
+		return _nlProtocalName;
+	else
+		return _dllProtocalName;
 }
-size_t Packet::getLength()
+size_t Packet::getLength() const
 {
 	return _length;
 }

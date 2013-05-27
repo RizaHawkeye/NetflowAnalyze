@@ -15,9 +15,11 @@ public:
 	typedef unsigned char u_char;
 	ReceiveBuf();
 	ReceiveBuf(size_t);
-	int moveTo(ReceiveBuf& buf,size_t num);
+	int moveTo(ReceiveBuf* buf,size_t num);
 	virtual ~ReceiveBuf();
 	size_t size();
+	int addPkt( u_char*,size_t );
+	int addPkthdr( pcap_pkthdr*);
 protected:
 	CircularQueue<u_char> _pktQue;
 	deque<pcap_pkthdr*> _pkthdrQue;

@@ -2,16 +2,16 @@
 #include<fstream>
 
 using std::ofstream;
-using std::endl;
 
-const string PATH = "~/code/bishe/log.txt";
+string Log::PATH = "../log.txt";
 
-Log::Log(string path = PATH) :fout(path)
-{ }
-
-void writeLog(const string& msg)
+Log::Log(string path) :fout(path.c_str())
 {
-	fout<<msg<<endl;
+}
+
+void Log::writeLog(const string& msg)
+{
+	fout<<msg<<std::endl;
 	fout.flush();
 }
 

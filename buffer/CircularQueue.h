@@ -27,7 +27,7 @@ private:
 	T* _tailPtr;
 public:
 	CircularQueue(size_t maxsize = 102400);
-	int enQueue(T* buf,size_t num);
+	int enQueue(const T* buf,size_t num);
 	int deQueue(T* buf,size_t num);
 	int deQueueAll(T* buf);
 	//CircularQueue& operator=(const CircularQueue&);
@@ -54,7 +54,7 @@ CircularQueue<T>::CircularQueue(size_t maxsize):MAXSIZE(maxsize),_curCount(0)
  *如果空间不够就返回-1
  */
 template<typename T>
-int CircularQueue<T>::enQueue(T* buf,size_t num)
+int CircularQueue<T>::enQueue(const T* buf,size_t num)
 {
 	if(_tailPtr >= _headPtr)
 	{

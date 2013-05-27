@@ -3,5 +3,5 @@
 
 int aggregate(SharedBuf* sbuf)
 {
-	
+	return 0;
 }

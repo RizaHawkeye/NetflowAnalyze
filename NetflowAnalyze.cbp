@@ -31,6 +31,22 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="Aggregate.cpp" />
+		<Unit filename="Store.cpp" />
+		<Unit filename="buffer/BufUnit.h" />
+		<Unit filename="buffer/CircularQueue.h" />
+		<Unit filename="buffer/ReceiveBuf.cpp" />
+		<Unit filename="buffer/ReceiveBuf.h" />
+		<Unit filename="buffer/SharedBuf.cpp" />
+		<Unit filename="buffer/SharedBuf.h" />
+		<Unit filename="libpcap/LibpcapClass.cpp" />
+		<Unit filename="libpcap/LibpcapClass.h" />
+		<Unit filename="log/Log.cpp" />
+		<Unit filename="log/Log.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="packet/Packet.cpp" />
+		<Unit filename="packet/Packet.h" />
+		<Unit filename="test/testCircularQueue.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

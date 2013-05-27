@@ -1,12 +1,14 @@
 #ifndef _MY_LOG_
 #define _MY_LOG_
 #include<string>
+#include<fstream>
 using std::string;
+using std::ofstream;
 
 class Log
 {
 private:
-	const string PATH;
+	static string PATH;
 	ofstream fout;
 public:
 	Log(string path = PATH);

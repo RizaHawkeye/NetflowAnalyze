@@ -35,3 +35,10 @@ Completed:
 
 Should complete
 1. being to test and debug
+
+2013-5-27 16:40
+Completed:
+complete debug
+
+Shoueld complete:
+testing

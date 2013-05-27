@@ -3,3 +3,13 @@
 *.tmp
 a
 *.swp
+*.out
+
+#这是code::blocks的工程文件
+*.cbp
+*.depend
+*.layout
+
+#这是code::blocks的生成文件夹
+obj/
+bin/

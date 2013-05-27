@@ -1,22 +1,27 @@
 #include<string>
 #include<iostream>
-#include"../LibpcapClass.h"
-
+#include"libpcap/LibpcapClass.h"
+#include<pthread.h>
+void* storeThread(void* args);
 int main()
 {
 	if(LibpcapClass::initDevice() == -1)
 	{
-		cerr<<"Init network interface error"<<endl;
+		std::cerr<<"Init network interface error"<<std::endl;
 	}
-	LibpcapClass libpcapObj;
+	LibpcapClass* libpcapIns = LibpcapClass::instance();
 
+	SharedBuf* sharedBuf = new SharedBuf();
 	//TODO:create a new thread to store
 	pthread_t tid;
-	pthread_create(tid,NULL,storeThread,
+	void* arg = static_cast<void*>(sharedBuf);
+	pthread_create(&tid,NULL,storeThread,arg);
 
 	///begin to receive packets
-	libpcapObj.beginReceive();
+	libpcapIns->beginReceive(sharedBuf);
 
+	if(sharedBuf != 0)
+		delete sharedBuf;
 	return 0;
 }
 

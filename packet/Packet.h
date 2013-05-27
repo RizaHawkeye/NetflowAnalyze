@@ -1,5 +1,6 @@
 /**************************************************
  *_packet point to the packet
+ *system head files in /usr/include/net/ethernet.h
  **************************************************/
 #ifndef _QR_PACKET_
 #define _QR_PACKET_
@@ -9,6 +10,8 @@
 #include<netinet/tcp.h>
 #include<net/ethernet.h>
 #include<netinet/ip6.h>
+#include<arpa/inet.h>   //inet_aton  inet_ntop
+#include<netinet/in.h>  //htonl
 using std::string;
 class Packet
 {
@@ -62,17 +65,17 @@ public:
 	Packet(pcap_pkthdr*,u_char*);
 	~Packet();
 	//TODO:I perfer to return string or add another four function to return string
-	u_int32 getSrcIpv4();
-	u_int32 getDstIpv4();
-	in6_addr getSrcIpv6();
-	in6_addr getDstIpv6();
+	u_int32 getSrcIpv4() const;
+	u_int32 getDstIpv4() const;
+	in6_addr getSrcIpv6() const;
+	in6_addr getDstIpv6() const;
 
 	//TODO: how to change to string
 	///this set of functions used to store
-	string getSource();
-	string getDestination();
-	string getTime();
-	string getProtocal();
-	size_t getLength();
+	string getSource() const;
+	string getDestination() const;
+	string getTime() const;
+	string getProtocal() const;
+	size_t getLength() const;
 };
 #endif
